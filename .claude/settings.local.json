@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(powershell:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "WebFetch(domain:socket.io)",
+      "WebFetch(domain:www.boilit.dev)",
+      "WebFetch(domain:www.pedroalonso.net)",
+      "Bash(npx create-next-app:*)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" --version)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" --version)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npx.cmd\" create-next-app@latest \"D:\\\\dev\\\\bf-point-estimate\" --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --turbopack --yes)",
+      "Bash(set \"PATH=C:\\\\Program Files\\\\nodejs;%PATH%\")",
+      "Bash(cmd /C \"set PATH=C:\\\\Program Files\\\\nodejs;%PATH% && node --version && npm --version\")",
+      "Bash(cmd /C \"set \"PATH=C:Program Filesnodejs)",
+      "Bash(%PATH%\" && node --version && npm --version\")",
+      "Bash(cmd /C \"D:\\\\dev\\\\bf-point-estimate\\\\init.bat\")",
+      "Bash(git init:*)",
+      "Bash(git config:*)"
+    ]
+  }
+}

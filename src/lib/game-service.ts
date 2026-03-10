@@ -5,6 +5,7 @@ import {
   type PublicParticipant,
   type RoundResults,
   type Participant,
+  type ParticipantRole,
   NUMERIC_CARDS,
 } from './types';
 
@@ -16,9 +17,12 @@ class GameService {
     isRevealed: false,
     adminId: null,
     roundNumber: 1,
+    storyTitle: '',
+    storyDescription: '',
   };
 
   private listeners = new Set<Listener>();
+  private onlineParticipants = new Set<string>();
 
   subscribe(listener: Listener): () => void {
     this.listeners.add(listener);
@@ -27,13 +31,24 @@ class GameService {
     };
   }
 
+  markOnline(participantId: string): () => void {
+    this.onlineParticipants.add(participantId);
+    this.broadcast();
+    return () => {
+      this.onlineParticipants.delete(participantId);
+      this.broadcast();
+    };
+  }
+
   getPublicState(): PublicGameState {
     const participants: PublicParticipant[] = this.state.participants.map((p) => ({
       id: p.id,
       name: p.name,
       avatar: p.avatar,
-      hasVoted: p.vote !== null,
-      vote: this.state.isRevealed ? p.vote : null,
+      role: p.role,
+      isOnline: this.onlineParticipants.has(p.id),
+      hasVoted: p.role === 'observer' ? false : p.vote !== null,
+      vote: this.state.isRevealed && p.role !== 'observer' ? p.vote : null,
     }));
 
     return {
@@ -42,6 +57,8 @@ class GameService {
       adminId: this.state.adminId,
       roundNumber: this.state.roundNumber,
       results: this.state.isRevealed ? this.computeResults() : null,
+      storyTitle: this.state.storyTitle,
+      storyDescription: this.state.storyDescription,
     };
   }
 
@@ -57,7 +74,9 @@ class GameService {
   }
 
   private computeResults(): RoundResults {
-    const votedParticipants = this.state.participants.filter((p) => p.vote !== null);
+    const votedParticipants = this.state.participants.filter(
+      (p) => p.vote !== null && p.role !== 'observer'
+    );
 
     const votes = votedParticipants.map((p) => ({
       participantId: p.id,
@@ -83,10 +102,15 @@ class GameService {
       distribution[v] = (distribution[v] || 0) + 1;
     }
 
-    return { average, votes, consensus, distribution };
+    const spread =
+      numericVotes.length >= 2
+        ? Math.max(...numericVotes) - Math.min(...numericVotes)
+        : null;
+
+    return { average, votes, consensus, distribution, spread };
   }
 
-  join(name: string, avatar: string): Participant {
+  join(name: string, avatar: string, role: ParticipantRole = 'player'): Participant {
     const id = crypto.randomUUID();
     const participant: Participant = {
       id,
@@ -94,6 +118,8 @@ class GameService {
       avatar,
       vote: null,
       joinedAt: Date.now(),
+      role,
+      isOnline: false,
     };
 
     this.state.participants.push(participant);
@@ -124,6 +150,7 @@ class GameService {
   vote(participantId: string, value: CardValue): void {
     const participant = this.state.participants.find((p) => p.id === participantId);
     if (!participant) throw new Error('Participant not found');
+    if (participant.role === 'observer') throw new Error('Observers cannot vote');
     if (this.state.isRevealed) throw new Error('Round already revealed');
 
     participant.vote = value;
@@ -156,6 +183,13 @@ class GameService {
       p.vote = null;
     }
 
+    this.broadcast();
+  }
+
+  setStory(requesterId: string, title: string, description: string): void {
+    if (this.state.adminId !== requesterId) throw new Error('Only admin can set story');
+    this.state.storyTitle = title.trim().slice(0, 120);
+    this.state.storyDescription = description.trim().slice(0, 500);
     this.broadcast();
   }
 

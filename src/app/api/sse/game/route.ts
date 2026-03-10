@@ -5,9 +5,16 @@ export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   const encoder = new TextEncoder();
+  const url = new URL(req.url);
+  const participantId = url.searchParams.get('participantId');
 
   const stream = new ReadableStream({
     start(controller) {
+      // Mark participant online and get cleanup function
+      const unmarkOnline = participantId
+        ? gameService.markOnline(participantId)
+        : () => {};
+
       // Send current state immediately
       const initialState = gameService.getPublicState();
       controller.enqueue(encoder.encode(`data: ${JSON.stringify(initialState)}\n\n`));
@@ -32,6 +39,7 @@ export async function GET(req: Request) {
 
       // Cleanup on disconnect
       req.signal.addEventListener('abort', () => {
+        unmarkOnline();
         clearInterval(heartbeat);
         unsubscribe();
         try {

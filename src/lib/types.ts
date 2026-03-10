@@ -4,12 +4,16 @@ export const CARD_VALUES: CardValue[] = ['0', '1', '2', '3', '5', '8', '13', '21
 
 export const NUMERIC_CARDS: CardValue[] = ['0', '1', '2', '3', '5', '8', '13', '21'];
 
+export type ParticipantRole = 'player' | 'observer';
+
 export interface Participant {
   id: string;
   name: string;
   avatar: string;
   vote: CardValue | null;
   joinedAt: number;
+  role: ParticipantRole;
+  isOnline: boolean;
 }
 
 export interface GameState {
@@ -17,6 +21,8 @@ export interface GameState {
   isRevealed: boolean;
   adminId: string | null;
   roundNumber: number;
+  storyTitle: string;
+  storyDescription: string;
 }
 
 export interface PublicParticipant {
@@ -25,6 +31,8 @@ export interface PublicParticipant {
   avatar: string;
   hasVoted: boolean;
   vote: CardValue | null;
+  role: ParticipantRole;
+  isOnline: boolean;
 }
 
 export interface RoundResults {
@@ -32,6 +40,7 @@ export interface RoundResults {
   votes: { participantId: string; name: string; vote: CardValue }[];
   consensus: boolean;
   distribution: Record<string, number>;
+  spread: number | null;
 }
 
 export interface PublicGameState {
@@ -40,6 +49,41 @@ export interface PublicGameState {
   adminId: string | null;
   roundNumber: number;
   results: RoundResults | null;
+  storyTitle: string;
+  storyDescription: string;
+}
+
+export interface JoinPayload {
+  name: string;
+  avatar: string;
+  role: ParticipantRole;
+}
+
+export type ToastType = 'disconnected' | 'reconnected' | 'error' | 'info' | 'session-expired' | 'kicked';
+
+export interface Toast {
+  id: string;
+  type: ToastType;
+  title: string;
+  body?: string;
+  persistent: boolean;
+  dismissAfter?: number;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
+
+export type ConfirmVariant = 'gold' | 'red';
+
+export interface ConfirmationModalConfig {
+  title: string;
+  body: React.ReactNode;
+  confirmLabel: string;
+  confirmVariant: ConfirmVariant;
+  icon?: string;
+  onConfirm: () => void | Promise<void>;
+  onCancel?: () => void;
 }
 
 export const AVATARS: { id: string; emoji: string; label: string }[] = [

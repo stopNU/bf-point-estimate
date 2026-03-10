@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import JoinForm from '@/components/JoinForm';
 import { useGameActions } from '@/hooks/useGameActions';
+import type { ParticipantRole } from '@/lib/types';
 
 export default function Home() {
   const router = useRouter();
@@ -20,8 +21,8 @@ export default function Home() {
     }
   }, [router]);
 
-  const handleJoin = async (name: string, avatar: string) => {
-    await join(name, avatar);
+  const handleJoin = async (name: string, avatar: string, role: ParticipantRole = 'player') => {
+    await join(name, avatar, role);
     router.push('/game');
   };
 

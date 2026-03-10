@@ -6,19 +6,34 @@ import type { PublicGameState } from '@/lib/types';
 export function useGameSSE() {
   const [gameState, setGameState] = useState<PublicGameState | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [isReconnecting, setIsReconnecting] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const prevGameStateRef = useRef<PublicGameState | null>(null);
+  const currentUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/sse/game');
+    // Get participantId from localStorage for online tracking
+    const participantId = typeof window !== 'undefined'
+      ? localStorage.getItem('participantId') ?? ''
+      : '';
+    currentUserIdRef.current = participantId || null;
+
+    const url = participantId
+      ? `/api/sse/game?participantId=${participantId}`
+      : '/api/sse/game';
+
+    const eventSource = new EventSource(url);
     eventSourceRef.current = eventSource;
 
     eventSource.onopen = () => {
       setIsConnected(true);
+      setIsReconnecting(false);
     };
 
     eventSource.onmessage = (event) => {
       try {
         const state: PublicGameState = JSON.parse(event.data);
+        prevGameStateRef.current = state;
         setGameState(state);
       } catch {
         // ignore parse errors
@@ -27,6 +42,7 @@ export function useGameSSE() {
 
     eventSource.onerror = () => {
       setIsConnected(false);
+      setIsReconnecting(true);
       // EventSource auto-reconnects by default
     };
 
@@ -36,5 +52,5 @@ export function useGameSSE() {
     };
   }, []);
 
-  return { gameState, isConnected };
+  return { gameState, isConnected, isReconnecting };
 }

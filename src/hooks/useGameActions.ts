@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import type { CardValue } from '@/lib/types';
+import type { CardValue, ParticipantRole } from '@/lib/types';
 
 function getParticipantId(): string | null {
   if (typeof window === 'undefined') return null;
@@ -22,8 +22,8 @@ async function postAction(url: string, body: Record<string, unknown>) {
 }
 
 export function useGameActions() {
-  const join = useCallback(async (name: string, avatar: string) => {
-    const data = await postAction('/api/game/join', { name, avatar });
+  const join = useCallback(async (name: string, avatar: string, role: ParticipantRole = 'player') => {
+    const data = await postAction('/api/game/join', { name, avatar, role });
     localStorage.setItem('participantId', data.participantId);
     return data.participantId as string;
   }, []);
@@ -65,5 +65,19 @@ export function useGameActions() {
     localStorage.removeItem('participantId');
   }, []);
 
-  return { join, vote, reveal, reset, transferAdmin, kick, leave };
+  const setStory = useCallback(async (title: string, description: string) => {
+    const participantId = getParticipantId();
+    if (!participantId) throw new Error('Not joined');
+    const res = await fetch('/api/game/story', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ participantId, title, description }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || 'Request failed');
+    }
+  }, []);
+
+  return { join, vote, reveal, reset, transferAdmin, kick, leave, setStory };
 }

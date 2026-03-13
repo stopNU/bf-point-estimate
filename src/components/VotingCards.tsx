@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { CARD_VALUES, NUMERIC_CARDS, type CardValue } from '@/lib/types';
+import { soundService } from '@/lib/sound-service';
 
 interface VotingCardsProps {
   selectedValue: CardValue | null;
@@ -54,7 +55,19 @@ export default function VotingCards({ selectedValue, onVote, disabled, isObserve
 
   const handleClick = (value: CardValue) => {
     if (disabled) return;
-    onVote(selectedValue === value ? null : value);
+    if (selectedValue === value) {
+      // Deselecting current vote
+      soundService.playVoteClear();
+      onVote(null);
+    } else if (selectedValue !== null) {
+      // Changing existing vote
+      soundService.playVoteChange();
+      onVote(value);
+    } else {
+      // New vote
+      soundService.playVote();
+      onVote(value);
+    }
   };
 
   // Global keyboard shortcuts
@@ -68,12 +81,25 @@ export default function VotingCards({ selectedValue, onVote, disabled, isObserve
         (active as HTMLElement)?.isContentEditable;
       if (isInput) return;
 
-      if (e.key === 'Escape') { onVote(null); return; }
+      if (e.key === 'Escape') {
+        if (selectedValue !== null) soundService.playVoteClear();
+        onVote(null);
+        return;
+      }
 
       const mappedValue = SHORTCUT_MAP[e.key];
       if (mappedValue) {
         e.preventDefault();
-        onVote(selectedValue === mappedValue ? null : mappedValue);
+        if (selectedValue === mappedValue) {
+          soundService.playVoteClear();
+          onVote(null);
+        } else if (selectedValue !== null) {
+          soundService.playVoteChange();
+          onVote(mappedValue);
+        } else {
+          soundService.playVote();
+          onVote(mappedValue);
+        }
       }
     };
     document.addEventListener('keydown', handler);

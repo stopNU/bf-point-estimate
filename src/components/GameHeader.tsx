@@ -5,6 +5,8 @@ interface GameHeaderProps {
   participantCount: number;
   isConnected: boolean;
   isReconnecting: boolean;
+  isMuted: boolean;
+  onToggleMute: () => void;
   onLeave: () => void;
 }
 
@@ -13,6 +15,8 @@ export default function GameHeader({
   participantCount,
   isConnected,
   isReconnecting,
+  isMuted,
+  onToggleMute,
   onLeave,
 }: GameHeaderProps) {
   return (
@@ -40,8 +44,17 @@ export default function GameHeader({
         </span>
       </div>
 
-      {/* Right: connection + leave */}
+      {/* Right: sound + connection + leave */}
       <div className="flex items-center gap-3">
+        <button
+          onClick={onToggleMute}
+          aria-label={isMuted ? 'Unmute sound effects' : 'Mute sound effects'}
+          title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+          className="rounded-lg border border-casino-border p-1.5 text-sm text-casino-muted transition-colors hover:border-gold-600 hover:text-gold-400"
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
+
         <div
           role="status"
           aria-live="polite"

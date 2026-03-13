@@ -12,6 +12,7 @@ import ParticipantDrawer from './ParticipantDrawer';
 import ConfirmationModal from './ConfirmationModal';
 import { useConfirmation } from '@/hooks/useConfirmation';
 import { useToast } from '@/hooks/useToast';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 
 interface GameBoardProps {
   gameState: PublicGameState;
@@ -54,6 +55,7 @@ export default function GameBoard({
 
   const { isOpen: confirmOpen, config: confirmConfig, confirm, close: closeConfirm } = useConfirmation();
   const { addToast } = useToast();
+  const { isMuted, toggleMute } = useSoundEffects(gameState);
 
   // Sync selected vote from server state
   useEffect(() => {
@@ -151,6 +153,8 @@ export default function GameBoard({
           participantCount={gameState.participants.length}
           isConnected={isConnected}
           isReconnecting={isReconnecting}
+          isMuted={isMuted}
+          onToggleMute={toggleMute}
           onLeave={handleLeave}
         />
 

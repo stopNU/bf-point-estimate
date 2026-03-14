@@ -1,5 +1,8 @@
 'use client';
 
+import ThemeToggle from './ThemeToggle';
+import { useTheme } from '@/hooks/useTheme';
+
 interface GameHeaderProps {
   roundNumber: number;
   participantCount: number;
@@ -19,6 +22,138 @@ export default function GameHeader({
   onToggleMute,
   onLeave,
 }: GameHeaderProps) {
+  const { isCosmos } = useTheme();
+
+  if (isCosmos) {
+    return (
+      <header
+        role="banner"
+        className="sticky top-0 z-50 flex h-14 items-center justify-between px-4 sm:px-6"
+        style={{
+          background: 'linear-gradient(180deg, #0C1220 0%, #070B14 100%)',
+          borderBottom: '1px solid var(--color-cosmos-hull)',
+          boxShadow: '0 2px 0 rgba(0,191,255,0.1)',
+        }}
+      >
+        {/* Left: Logo + Round */}
+        <div className="flex items-center gap-3">
+          <h1
+            className="text-lg uppercase tracking-wider"
+            style={{ fontFamily: 'var(--font-cosmos-display)', color: 'var(--color-cosmos-beam-500)' }}
+          >
+            COSMOSWIN
+          </h1>
+          <div style={{ width: '1px', height: '16px', background: 'var(--color-cosmos-hull)' }} />
+          <div className="hidden sm:flex flex-col">
+            <span
+              className="text-[9px] uppercase tracking-widest"
+              style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+            >
+              ROUND
+            </span>
+            <span
+              aria-label={`Round ${roundNumber}`}
+              className="text-sm tracking-wider leading-none"
+              style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-beam-400)' }}
+            >
+              {String(roundNumber).padStart(2, '0')}
+            </span>
+          </div>
+        </div>
+
+        {/* Center: participant count */}
+        <div className="hidden sm:flex items-center gap-1.5">
+          <span
+            className="text-xs tracking-widest"
+            style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+          >
+            {participantCount} OPS ONLINE
+          </span>
+        </div>
+
+        {/* Right: sound + connection + theme + leave */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onToggleMute}
+            aria-label={isMuted ? 'Unmute sound effects' : 'Mute sound effects'}
+            title={isMuted ? 'Unmute sounds' : 'Mute sounds'}
+            className="px-2 py-1.5 text-sm transition-all"
+            style={{
+              border: '1px solid var(--color-cosmos-hull)',
+              color: 'var(--color-cosmos-text-secondary)',
+              borderRadius: 0,
+            }}
+          >
+            {isMuted ? '🔇' : '🔊'}
+          </button>
+
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex items-center gap-1.5"
+          >
+            {isConnected ? (
+              <>
+                <span
+                  className="cosmos-online-dot h-2 w-2 rounded-full"
+                  style={{ background: 'var(--color-cosmos-online)' }}
+                />
+                <span
+                  className="hidden sm:inline text-xs"
+                  style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+                >
+                  CONNECTED
+                </span>
+              </>
+            ) : (
+              <>
+                <span
+                  className="h-2 w-2 rounded-full flex-shrink-0"
+                  style={{ background: 'var(--color-cosmos-magenta-500)' }}
+                />
+                <span
+                  className={`hidden sm:inline text-xs ${isReconnecting ? 'animate-pulse' : ''}`}
+                  style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+                >
+                  {isReconnecting ? 'RECONNECTING...' : 'OFFLINE'}
+                </span>
+              </>
+            )}
+          </div>
+
+          <ThemeToggle />
+
+          <button
+            onClick={onLeave}
+            aria-label="Leave the session"
+            className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all"
+            style={{
+              fontFamily: 'var(--font-cosmos-ui)',
+              border: '1px solid var(--color-cosmos-magenta-600)',
+              color: 'var(--color-cosmos-magenta-500)',
+              borderRadius: 0,
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget;
+              el.style.background = 'var(--color-cosmos-magenta-600)';
+              el.style.color = 'white';
+              el.style.boxShadow = '0 0 12px var(--color-cosmos-magenta-glow)';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget;
+              el.style.background = '';
+              el.style.color = 'var(--color-cosmos-magenta-500)';
+              el.style.boxShadow = '';
+            }}
+          >
+            DISCONNECT
+          </button>
+        </div>
+      </header>
+    );
+  }
+
+  // Casino theme
   return (
     <header
       role="banner"
@@ -44,7 +179,7 @@ export default function GameHeader({
         </span>
       </div>
 
-      {/* Right: sound + connection + leave */}
+      {/* Right: sound + connection + theme + leave */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMute}
@@ -77,6 +212,8 @@ export default function GameHeader({
             </>
           )}
         </div>
+
+        <ThemeToggle />
 
         <button
           onClick={onLeave}

@@ -20,6 +20,18 @@ export const metadata: Metadata = {
   description: "Casino-themed point estimation for agile teams",
 };
 
+// Inline script to apply saved theme before first paint (prevents FOUC)
+const themeScript = `
+(function() {
+  try {
+    var theme = localStorage.getItem('bf-theme');
+    if (theme === 'cosmoswin') {
+      document.documentElement.setAttribute('data-theme', 'cosmoswin');
+    }
+  } catch(e) {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,6 +39,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Anti-FOUC theme restore */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {/* Cosmoswin fonts — loaded lazily via useTheme hook, preconnect here */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className={`${playfair.variable} ${inter.variable} antialiased`}>
         <ToastProvider>{children}</ToastProvider>
       </body>

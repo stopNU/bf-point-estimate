@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import AvatarPicker from './AvatarPicker';
+import ThemeToggle from './ThemeToggle';
 import type { ParticipantRole } from '@/lib/types';
+import { useTheme } from '@/hooks/useTheme';
 
 interface JoinFormProps {
   onJoin: (name: string, avatar: string, role: ParticipantRole) => Promise<void>;
@@ -14,11 +16,12 @@ export default function JoinForm({ onJoin }: JoinFormProps) {
   const [role, setRole] = useState<ParticipantRole>('player');
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState('');
+  const { isCosmos } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Enter your name to take a seat');
+      setError(isCosmos ? 'OPERATIVE NAME REQUIRED' : 'Enter your name to take a seat');
       return;
     }
     setIsJoining(true);
@@ -33,6 +36,205 @@ export default function JoinForm({ onJoin }: JoinFormProps) {
 
   const remaining = 20 - name.length;
 
+  if (isCosmos) {
+    return (
+      <div className="cosmos-joinform-bg flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-lg">
+          {/* Header */}
+          <div className="mb-8 text-center cosmos-logo-reveal">
+            <h1
+              className="text-7xl uppercase tracking-wide"
+              style={{
+                fontFamily: 'var(--font-cosmos-display)',
+                background: 'linear-gradient(135deg, var(--color-cosmos-beam-300), var(--color-cosmos-cyan-400))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: 'none',
+                filter: 'drop-shadow(0 0 30px rgba(0,191,255,0.6))',
+              }}
+            >
+              Cosmoswin
+            </h1>
+            <p
+              className="mt-2 text-xs uppercase tracking-widest"
+              style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+            >
+              DEPLOYMENT TERMINAL
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div
+              className="relative p-6 sm:p-8"
+              style={{
+                background: 'var(--color-cosmos-deep)',
+                border: '1px solid var(--color-cosmos-hull)',
+                borderTop: '2px solid var(--color-cosmos-beam-500)',
+                boxShadow: 'inset 0 0 0 1px rgba(0,191,255,0.08)',
+                borderRadius: 0,
+              }}
+            >
+              {/* Name input */}
+              <div className="mb-6">
+                <div className="mb-2 flex items-center justify-between">
+                  <label
+                    htmlFor="name"
+                    className="text-xs font-bold uppercase tracking-widest"
+                    style={{ fontFamily: 'var(--font-cosmos-ui)', color: 'var(--color-cosmos-text-secondary)' }}
+                  >
+                    OPERATIVE NAME
+                  </label>
+                  <span
+                    aria-live="polite"
+                    className="text-xs tabular-nums"
+                    style={{ fontFamily: 'var(--font-cosmos-mono)', color: remaining <= 5 ? 'var(--color-cosmos-magenta-500)' : 'var(--color-cosmos-text-dim)' }}
+                  >
+                    {remaining}
+                  </span>
+                </div>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter operative name..."
+                  maxLength={20}
+                  autoFocus
+                  autoComplete="nickname"
+                  style={{
+                    background: 'var(--color-cosmos-void)',
+                    border: '1px solid var(--color-cosmos-hull)',
+                    color: 'var(--color-cosmos-text-primary)',
+                    borderRadius: 0,
+                    fontFamily: 'var(--font-cosmos-ui)',
+                    fontWeight: 600,
+                  }}
+                  className="w-full px-4 py-3 outline-none transition-all placeholder-[var(--color-cosmos-text-dim)]
+                    focus:[border-color:var(--color-cosmos-beam-500)]
+                    focus:[box-shadow:0_0_0_1px_rgba(0,191,255,0.3),0_0_16px_rgba(0,191,255,0.2)]"
+                />
+              </div>
+
+              {/* Avatar picker */}
+              <div className="mb-6">
+                <label
+                  className="mb-3 block text-xs font-bold uppercase tracking-widest"
+                  style={{ fontFamily: 'var(--font-cosmos-ui)', color: 'var(--color-cosmos-text-secondary)' }}
+                >
+                  SELECT AVATAR
+                </label>
+                <AvatarPicker selected={avatar} onSelect={setAvatar} />
+              </div>
+
+              {/* Role toggle */}
+              <div className="mb-6">
+                <label
+                  className="mb-2 block text-xs font-bold uppercase tracking-widest"
+                  style={{ fontFamily: 'var(--font-cosmos-ui)', color: 'var(--color-cosmos-text-secondary)' }}
+                >
+                  ROLE
+                </label>
+                <div role="radiogroup" aria-label="Participation role" className="flex gap-0">
+                  {(['player', 'observer'] as const).map((r) => (
+                    <label
+                      key={r}
+                      className="flex flex-1 cursor-pointer items-center justify-center gap-2 px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all"
+                      style={{
+                        fontFamily: 'var(--font-cosmos-ui)',
+                        background: role === r ? 'var(--color-cosmos-beam-500)' : 'transparent',
+                        border: '1px solid var(--color-cosmos-hull)',
+                        color: role === r ? 'var(--color-cosmos-text-inverse)' : 'var(--color-cosmos-text-secondary)',
+                        borderRadius: 0,
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="role"
+                        value={r}
+                        checked={role === r}
+                        onChange={() => setRole(r)}
+                        className="sr-only"
+                      />
+                      <span aria-hidden="true">{r === 'player' ? '🎯' : '👁'}</span>
+                      <span>{r === 'player' ? 'PLAYER' : 'OBSERVER'}</span>
+                    </label>
+                  ))}
+                </div>
+
+                {role === 'observer' && (
+                  <div
+                    role="note"
+                    aria-live="polite"
+                    className="mt-3 px-4 py-3 text-sm animate-[fadeSlideDown_200ms_ease-out] overflow-hidden"
+                    style={{
+                      background: 'var(--color-cosmos-void)',
+                      border: '1px solid var(--color-cosmos-hull)',
+                      borderLeft: '3px solid var(--color-cosmos-beam-700)',
+                      color: 'var(--color-cosmos-text-secondary)',
+                      fontFamily: 'var(--font-cosmos-ui)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span style={{ color: 'var(--color-cosmos-text-primary)', fontWeight: 700 }}>SPECTATOR MODE:</span>{' '}
+                    Observe in real time without affecting mission results.
+                  </div>
+                )}
+              </div>
+
+              {/* Error */}
+              {error && (
+                <p
+                  role="alert"
+                  className="mb-4 text-center text-sm"
+                  style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-magenta-500)' }}
+                >
+                  {error}
+                </p>
+              )}
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={isJoining}
+                className="w-full px-6 py-3 text-lg uppercase tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  fontFamily: 'var(--font-cosmos-display)',
+                  background: isJoining ? 'var(--color-cosmos-beam-700)' : 'var(--color-cosmos-beam-500)',
+                  color: 'var(--color-cosmos-text-inverse)',
+                  borderRadius: 0,
+                  border: 'none',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isJoining) {
+                    (e.target as HTMLElement).style.background = 'var(--color-cosmos-beam-400)';
+                    (e.target as HTMLElement).style.boxShadow = '0 0 20px rgba(0,191,255,0.5)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.background = isJoining ? 'var(--color-cosmos-beam-700)' : 'var(--color-cosmos-beam-500)';
+                  (e.target as HTMLElement).style.boxShadow = '';
+                }}
+              >
+                {isJoining
+                  ? 'ENGAGING...'
+                  : role === 'observer'
+                    ? 'OBSERVE MISSION'
+                    : 'ENGAGE ⟶'}
+              </button>
+
+              {/* Theme toggle — bottom right of form */}
+              <div className="mt-4 flex justify-end">
+                <ThemeToggle />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Casino theme
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-lg">
@@ -143,6 +345,11 @@ export default function JoinForm({ onJoin }: JoinFormProps) {
                   ? 'Watch the Table'
                   : 'Take a Seat'}
             </button>
+
+            {/* Theme toggle */}
+            <div className="mt-4 flex justify-end">
+              <ThemeToggle />
+            </div>
           </div>
         </form>
 

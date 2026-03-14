@@ -13,6 +13,7 @@ import ConfirmationModal from './ConfirmationModal';
 import { useConfirmation } from '@/hooks/useConfirmation';
 import { useToast } from '@/hooks/useToast';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useTheme } from '@/hooks/useTheme';
 
 interface GameBoardProps {
   gameState: PublicGameState;
@@ -56,6 +57,7 @@ export default function GameBoard({
   const { isOpen: confirmOpen, config: confirmConfig, confirm, close: closeConfirm } = useConfirmation();
   const { addToast } = useToast();
   const { isMuted, toggleMute } = useSoundEffects(gameState);
+  const { isCosmos } = useTheme();
 
   // Sync selected vote from server state
   useEffect(() => {
@@ -169,7 +171,14 @@ export default function GameBoard({
         {/* Main content */}
         <div className="flex flex-1 flex-col lg:flex-row min-h-0">
           {/* Sidebar: desktop only */}
-          <aside className="hidden lg:flex w-72 flex-col border-r border-casino-border bg-casino-dark p-4 overflow-y-auto">
+          <aside
+            className="hidden lg:flex w-72 flex-col p-4 overflow-y-auto"
+            style={isCosmos ? {
+              background: 'var(--color-cosmos-station)',
+              borderRight: '1px solid var(--color-cosmos-hull)',
+              boxShadow: 'inset 0 0 40px rgba(0,191,255,0.04)',
+            } : { borderRight: '1px solid', borderColor: 'var(--color-casino-border)', background: 'var(--color-casino-dark)' }}
+          >
             <ParticipantList
               gameState={gameState}
               currentUserId={currentUserId}
@@ -180,20 +189,52 @@ export default function GameBoard({
 
           {/* Main table */}
           <main className="flex flex-1 flex-col min-h-0">
-            {/* Felt table area */}
-            <div className="flex flex-1 items-center justify-center p-4 sm:p-6">
-              <div className="felt-bg w-full max-w-2xl rounded-3xl border-4 border-gold-900/30 p-6 sm:p-8 shadow-[inset_0_2px_20px_rgba(0,0,0,0.5)]">
+            {/* Table area */}
+            <div
+              className={`flex flex-1 items-center justify-center p-4 sm:p-6 ${isCosmos ? 'cosmos-battle-station' : ''}`}
+              style={isCosmos ? {} : { background: 'var(--color-casino-black)' }}
+            >
+              <div
+                className={`relative w-full max-w-2xl p-6 sm:p-8 ${
+                  isCosmos ? '' : 'felt-bg rounded-3xl border-4 border-gold-900/30 shadow-[inset_0_2px_20px_rgba(0,0,0,0.5)]'
+                }`}
+                style={isCosmos ? {
+                  border: '1px solid var(--color-cosmos-hull)',
+                  boxShadow: 'inset 0 0 0 1px rgba(0,191,255,0.08)',
+                  borderRadius: 0,
+                  zIndex: 1,
+                } : {}}
+              >
                 {gameState.isRevealed && gameState.results ? (
                   <ResultsDisplay results={gameState.results} />
                 ) : (
                   <div className="flex flex-col items-center gap-6 py-6">
                     <div className="text-center">
-                      <div className="font-display text-2xl font-semibold text-gold-400/80 mb-2">
-                        {hasVotes ? 'Votes Coming In...' : 'Place Your Bets'}
-                      </div>
-                      <p className="text-sm text-green-200/60">
-                        {votedCount} of {players.length} players have voted
-                      </p>
+                      {isCosmos ? (
+                        <>
+                          <div
+                            className="text-2xl uppercase tracking-wide mb-2"
+                            style={{ fontFamily: 'var(--font-cosmos-display)', color: 'var(--color-cosmos-beam-400)' }}
+                          >
+                            {hasVotes ? 'VOTES INCOMING' : 'AWAIT DEPLOYMENT'}
+                          </div>
+                          <p
+                            className="text-sm tracking-wider"
+                            style={{ fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }}
+                          >
+                            {votedCount} / {players.length} DEPLOYED
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <div className="font-display text-2xl font-semibold text-gold-400/80 mb-2">
+                            {hasVotes ? 'Votes Coming In...' : 'Place Your Bets'}
+                          </div>
+                          <p className="text-sm text-green-200/60">
+                            {votedCount} of {players.length} players have voted
+                          </p>
+                        </>
+                      )}
                     </div>
 
                     <div
@@ -206,20 +247,40 @@ export default function GameBoard({
                           key={p.id}
                           role="listitem"
                           aria-label={`${p.name}: ${p.hasVoted ? 'voted' : 'waiting'}`}
-                          className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${
-                            p.hasVoted
-                              ? 'bg-gold-400/15 text-gold-400 border border-gold-400/30'
-                              : 'bg-casino-dark/50 text-casino-muted border border-casino-border'
-                          }`}
+                          className={isCosmos
+                            ? 'flex items-center gap-1.5 px-3 py-1 text-xs'
+                            : `flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${
+                                p.hasVoted
+                                  ? 'bg-gold-400/15 text-gold-400 border border-gold-400/30'
+                                  : 'bg-casino-dark/50 text-casino-muted border border-casino-border'
+                              }`
+                          }
+                          style={isCosmos ? {
+                            background: p.hasVoted ? 'rgba(0,191,255,0.1)' : 'rgba(0,0,0,0.3)',
+                            border: `1px solid ${p.hasVoted ? 'var(--color-cosmos-beam-700)' : 'var(--color-cosmos-hull)'}`,
+                            color: p.hasVoted ? 'var(--color-cosmos-beam-400)' : 'var(--color-cosmos-text-dim)',
+                            borderRadius: 0,
+                            fontFamily: 'var(--font-cosmos-mono)',
+                          } : {}}
                         >
                           {p.hasVoted && (
-                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gold-400 chip-in" />
+                            <span
+                              className="inline-block h-1.5 w-1.5"
+                              style={isCosmos
+                                ? { background: 'var(--color-cosmos-beam-400)' }
+                                : { borderRadius: '50%', background: 'var(--color-gold-400)' }}
+                            />
                           )}
                           {p.name}
                         </div>
                       ))}
                       {players.length === 0 && (
-                        <p className="text-sm text-casino-muted">No players yet...</p>
+                        <p
+                          className="text-sm"
+                          style={isCosmos ? { color: 'var(--color-cosmos-text-dim)', fontFamily: 'var(--font-cosmos-mono)' } : { color: 'var(--color-casino-muted)' }}
+                        >
+                          {isCosmos ? 'NO OPERATIVES...' : 'No players yet...'}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -228,17 +289,29 @@ export default function GameBoard({
             </div>
 
             {/* Mobile: participant count + drawer trigger */}
-            <div className="flex lg:hidden items-center justify-between border-t border-casino-border bg-casino-dark px-4 py-2">
+            <div
+              className="flex lg:hidden items-center justify-between px-4 py-2"
+              style={isCosmos ? {
+                borderTop: '1px solid var(--color-cosmos-hull)',
+                background: 'var(--color-cosmos-station)',
+              } : { borderTop: '1px solid var(--color-casino-border)', background: 'var(--color-casino-dark)' }}
+            >
               <button
                 onClick={() => setDrawerOpen(true)}
                 aria-label={`View ${gameState.participants.length} participants`}
-                className="flex items-center gap-2 text-sm text-casino-muted hover:text-white transition-colors"
+                className="flex items-center gap-2 text-sm transition-colors"
+                style={isCosmos ? { color: 'var(--color-cosmos-text-secondary)', fontFamily: 'var(--font-cosmos-ui)', fontWeight: 600 } : {}}
               >
                 <span>👥</span>
-                {gameState.participants.length} participants
+                {isCosmos ? `${gameState.participants.length} OPERATIVES` : `${gameState.participants.length} participants`}
                 {!isObserver && (
-                  <span className="ml-1 text-xs text-gold-400">
-                    ({votedCount}/{players.length} voted)
+                  <span
+                    className="ml-1 text-xs"
+                    style={isCosmos
+                      ? { fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-beam-400)' }
+                      : { color: 'var(--color-gold-400)' }}
+                  >
+                    ({votedCount}/{players.length} {isCosmos ? 'deployed' : 'voted'})
                   </span>
                 )}
               </button>
@@ -246,10 +319,21 @@ export default function GameBoard({
 
             {/* Voting hand — players only */}
             {!isObserver && (
-              <div className="border-t border-casino-border bg-casino-dark p-4 sm:p-5">
+              <div
+                className="p-4 sm:p-5"
+                style={isCosmos ? {
+                  borderTop: '1px solid var(--color-cosmos-hull)',
+                  background: 'var(--color-cosmos-abyss)',
+                } : { borderTop: '1px solid var(--color-casino-border)', background: 'var(--color-casino-dark)' }}
+              >
                 <div className="mx-auto max-w-3xl">
-                  <div className="mb-2 text-center text-xs text-casino-muted font-medium uppercase tracking-wider">
-                    Your Hand
+                  <div
+                    className="mb-2 text-center text-xs font-medium uppercase tracking-wider"
+                    style={isCosmos
+                      ? { fontFamily: 'var(--font-cosmos-mono)', color: 'var(--color-cosmos-text-secondary)' }
+                      : { color: 'var(--color-casino-muted)' }}
+                  >
+                    {isCosmos ? 'DEPLOY SEQUENCE' : 'Your Hand'}
                   </div>
                   <VotingCards
                     selectedValue={selectedVote}

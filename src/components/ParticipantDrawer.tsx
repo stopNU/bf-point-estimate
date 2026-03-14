@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTheme } from '@/hooks/useTheme';
 
 interface ParticipantDrawerProps {
   isOpen: boolean;
@@ -18,7 +19,8 @@ export default function ParticipantDrawer({
   votedCount,
   totalVoters,
 }: ParticipantDrawerProps) {
-  // Body scroll lock while open
+  const { isCosmos } = useTheme();
+
   useEffect(() => {
     if (isOpen) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
@@ -30,7 +32,8 @@ export default function ParticipantDrawer({
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-casino-black/60 z-40 lg:hidden"
+          className="fixed inset-0 z-40 lg:hidden"
+          style={{ background: isCosmos ? 'rgba(3,4,10,0.85)' : 'rgba(10,10,10,0.6)' }}
           onClick={onClose}
           aria-hidden="true"
         />
@@ -43,14 +46,28 @@ export default function ParticipantDrawer({
         aria-label="Participant list"
         className={`
           fixed bottom-0 left-0 right-0 z-50 lg:hidden
-          rounded-t-2xl border-t border-casino-border bg-casino-dark
           transition-transform duration-300
           ${isOpen ? 'translate-y-0' : 'translate-y-full'}
         `}
+        style={isCosmos ? {
+          background: 'var(--color-cosmos-station)',
+          borderTop: '2px solid var(--color-cosmos-beam-500)',
+          borderRadius: 0,
+        } : {
+          borderTop: '1px solid var(--color-casino-border)',
+          background: 'var(--color-casino-dark)',
+          borderRadius: '16px 16px 0 0',
+        }}
       >
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-1">
-          <div className="h-1 w-10 rounded-full bg-casino-border" />
+          <div
+            className="h-1 w-10"
+            style={{
+              background: isCosmos ? 'var(--color-cosmos-hull)' : 'var(--color-casino-border)',
+              borderRadius: isCosmos ? 0 : '9999px',
+            }}
+          />
         </div>
 
         {/* Content */}

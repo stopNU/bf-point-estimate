@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { Toast as ToastType } from '@/lib/types';
+import { useTheme } from '@/hooks/useTheme';
 
 interface ToastProps {
   toast: ToastType;
@@ -10,6 +11,7 @@ interface ToastProps {
 
 export default function Toast({ toast, onRemove }: ToastProps) {
   const [isExiting, setIsExiting] = useState(false);
+  const { isCosmos } = useTheme();
 
   const dismiss = () => {
     setIsExiting(true);
@@ -32,6 +34,92 @@ export default function Toast({ toast, onRemove }: ToastProps) {
     kicked: '🚫',
   };
 
+  if (isCosmos) {
+    const cosmosAccentColor: Record<ToastType['type'], string> = {
+      disconnected: 'var(--color-cosmos-magenta-500)',
+      reconnected: 'var(--color-cosmos-online)',
+      error: 'var(--color-cosmos-magenta-500)',
+      info: 'var(--color-cosmos-beam-500)',
+      'session-expired': 'var(--color-cosmos-warning)',
+      kicked: 'var(--color-cosmos-magenta-500)',
+    };
+    const accent = cosmosAccentColor[toast.type];
+
+    return (
+      <div
+        role="status"
+        className={`
+          relative overflow-hidden w-full sm:w-80
+          ${isExiting
+            ? 'animate-[slideOutRight_200ms_ease-in_forwards]'
+            : 'animate-[slideInRight_250ms_ease-out]'
+          }
+        `}
+        style={{
+          background: 'var(--color-cosmos-station)',
+          border: '1px solid var(--color-cosmos-hull)',
+          borderLeft: `3px solid ${accent}`,
+          borderRadius: 0,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+        }}
+      >
+        <div className="flex items-start gap-3 px-4 py-3">
+          <span className="mt-0.5 text-base flex-shrink-0" aria-hidden="true">{iconMap[toast.type]}</span>
+          <div className="flex-1 min-w-0">
+            <div
+              className="text-sm uppercase tracking-wider"
+              style={{ fontFamily: 'var(--font-cosmos-ui)', fontWeight: 700, color: 'var(--color-cosmos-text-primary)' }}
+            >
+              {toast.title}
+            </div>
+            {toast.body && (
+              <div
+                className="mt-0.5 text-xs"
+                style={{ fontFamily: 'var(--font-cosmos-ui)', fontWeight: 600, color: 'var(--color-cosmos-text-secondary)' }}
+              >
+                {toast.body}
+              </div>
+            )}
+            {toast.action && (
+              <button
+                onClick={toast.action.onClick}
+                className="mt-2 text-xs font-bold uppercase tracking-wider transition-colors"
+                style={{ fontFamily: 'var(--font-cosmos-ui)', color: 'var(--color-cosmos-beam-400)' }}
+                aria-label={toast.type === 'session-expired' ? 'Rejoin the session' : toast.action.label}
+              >
+                {toast.action.label} →
+              </button>
+            )}
+          </div>
+          <button
+            onClick={dismiss}
+            aria-label="Dismiss notification"
+            className="flex-shrink-0 p-1 transition-colors"
+            style={{ color: 'var(--color-cosmos-text-dim)' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--color-cosmos-text-primary)'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--color-cosmos-text-dim)'; }}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Progress bar */}
+        {!toast.persistent && toast.dismissAfter && (
+          <div
+            aria-hidden="true"
+            className="h-0.5"
+            style={{
+              background: accent,
+              opacity: 0.4,
+              animation: `shrinkWidth ${toast.dismissAfter}ms linear forwards`,
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Casino theme
   const borderMap: Record<ToastType['type'], string> = {
     disconnected: 'border-casino-red/40',
     reconnected: 'border-green-500/40',
@@ -64,14 +152,10 @@ export default function Toast({ toast, onRemove }: ToastProps) {
       `}
     >
       <div className="flex items-start gap-3 px-4 py-3">
-        <span className="mt-0.5 text-base flex-shrink-0" aria-hidden="true">
-          {iconMap[toast.type]}
-        </span>
+        <span className="mt-0.5 text-base flex-shrink-0" aria-hidden="true">{iconMap[toast.type]}</span>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold text-white">{toast.title}</div>
-          {toast.body && (
-            <div className="mt-0.5 text-xs text-casino-muted">{toast.body}</div>
-          )}
+          {toast.body && <div className="mt-0.5 text-xs text-casino-muted">{toast.body}</div>}
           {toast.action && (
             <button
               onClick={toast.action.onClick}
@@ -91,14 +175,11 @@ export default function Toast({ toast, onRemove }: ToastProps) {
         </button>
       </div>
 
-      {/* Progress bar */}
       {!toast.persistent && toast.dismissAfter && (
         <div
           aria-hidden="true"
           className={`h-0.5 ${progressColorMap[toast.type]}`}
-          style={{
-            animation: `shrinkWidth ${toast.dismissAfter}ms linear forwards`,
-          }}
+          style={{ animation: `shrinkWidth ${toast.dismissAfter}ms linear forwards` }}
         />
       )}
     </div>

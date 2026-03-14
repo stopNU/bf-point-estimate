@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* === COSMOSWIN SHORTHANDS (resolve from data-theme tokens) === */
+  --color-cosmos-bg: var(--color-cosmos-abyss, transparent);
+  --color-cosmos-surface: var(--color-cosmos-deep, transparent);
+  --color-cosmos-elevated: var(--color-cosmos-station, transparent);
+  --color-cosmos-primary: var(--color-cosmos-beam-500, transparent);
+
   --color-gold-50: #fefce8;
   --color-gold-100: #fef9c3;
   --color-gold-200: #fef08a;
@@ -249,4 +255,355 @@ body {
     animation: none !important;
     opacity: 1 !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COSMOSWIN THEME
+   Applied when <html data-theme="cosmoswin">
+   ═══════════════════════════════════════════════════════════════ */
+
+[data-theme="cosmoswin"] {
+  /* === COSMOS RAW PALETTE === */
+  --color-cosmos-void:         #03040A;
+  --color-cosmos-abyss:        #070B14;
+  --color-cosmos-deep:         #0C1220;
+  --color-cosmos-station:      #111928;
+  --color-cosmos-hull:         #1A2540;
+  --color-cosmos-muted:        #2A3A5C;
+
+  /* Energy blue */
+  --color-cosmos-beam-50:      #E0F9FF;
+  --color-cosmos-beam-100:     #B3F1FF;
+  --color-cosmos-beam-200:     #7AE8FF;
+  --color-cosmos-beam-300:     #38D6FF;
+  --color-cosmos-beam-400:     #00C8FF;
+  --color-cosmos-beam-500:     #00BFFF;
+  --color-cosmos-beam-600:     #00A8E0;
+  --color-cosmos-beam-700:     #0090C0;
+  --color-cosmos-beam-800:     #006E99;
+  --color-cosmos-beam-900:     #004D6B;
+  --color-cosmos-beam-950:     #002A40;
+
+  /* Cyan */
+  --color-cosmos-cyan-300:     #67E8F9;
+  --color-cosmos-cyan-400:     #22D3EE;
+  --color-cosmos-cyan-500:     #06B6D4;
+  --color-cosmos-cyan-glow:    #22D3EE80;
+
+  /* Electric purple */
+  --color-cosmos-violet-300:   #C4B5FD;
+  --color-cosmos-violet-400:   #A78BFA;
+  --color-cosmos-violet-500:   #8B5CF6;
+  --color-cosmos-violet-600:   #7C3AED;
+  --color-cosmos-violet-glow:  #8B5CF680;
+
+  /* Hot magenta — danger */
+  --color-cosmos-magenta-400:  #F472B6;
+  --color-cosmos-magenta-500:  #EC4899;
+  --color-cosmos-magenta-600:  #DB2777;
+  --color-cosmos-magenta-glow: #EC489980;
+
+  /* Text scale */
+  --color-cosmos-text-primary:   #F0F4FF;
+  --color-cosmos-text-secondary: #8BA3C7;
+  --color-cosmos-text-dim:       #4A5E80;
+  --color-cosmos-text-inverse:   #03040A;
+
+  /* === SEMANTIC MAPPINGS === */
+  --color-cosmos-bg-base:       var(--color-cosmos-abyss);
+  --color-cosmos-bg-surface:    var(--color-cosmos-deep);
+  --color-cosmos-bg-elevated:   var(--color-cosmos-station);
+  --color-cosmos-bg-overlay:    #03040AE6;
+  --color-cosmos-border-default: var(--color-cosmos-hull);
+  --color-cosmos-border-active:  var(--color-cosmos-beam-500);
+  --color-cosmos-border-subtle:  var(--color-cosmos-muted);
+  --color-cosmos-border-danger:  var(--color-cosmos-magenta-500);
+  --color-cosmos-interactive-default: var(--color-cosmos-beam-500);
+  --color-cosmos-interactive-hover:   var(--color-cosmos-beam-400);
+  --color-cosmos-interactive-active:  var(--color-cosmos-beam-300);
+
+  /* Status */
+  --color-cosmos-online:    #00FF94;
+  --color-cosmos-offline:   #4A5E80;
+  --color-cosmos-warning:   #FBBF24;
+
+  /* Special effects */
+  --color-cosmos-screentone: rgba(0, 191, 255, 0.04);
+  --color-cosmos-scanline:   rgba(0, 191, 255, 0.02);
+  --color-cosmos-starfield:  rgba(240, 244, 255, 0.6);
+
+  /* Fonts */
+  --font-cosmos-display: "Bebas Neue", "Impact", sans-serif;
+  --font-cosmos-ui:      "Rajdhani", "Arial Narrow", sans-serif;
+  --font-cosmos-mono:    "Share Tech Mono", "Courier New", monospace;
+  --font-cosmos-body:    "Rajdhani", system-ui, sans-serif;
+}
+
+/* ─── COSMOSWIN BACKGROUNDS ────────────────────────────────── */
+
+.cosmos-battle-station {
+  background-color: var(--color-cosmos-abyss);
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(240,244,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(240,244,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 8%,  rgba(240,244,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 60%, rgba(240,244,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 25%, rgba(240,244,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 75%, rgba(240,244,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 80%, rgba(240,244,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 90%, rgba(240,244,255,0.3) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 33% 55%, rgba(240,244,255,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 12%, rgba(240,244,255,0.6) 0%, transparent 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0 L56 16 L56 50 L28 66 L0 50 L0 16 Z' fill='none' stroke='%2300BFFF' stroke-width='0.3' opacity='0.12'/%3E%3Cpath d='M28 66 L56 82 L56 116 L28 132 L0 116 L0 82 Z' fill='none' stroke='%2300BFFF' stroke-width='0.3' opacity='0.12'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 120% 80% at 50% 50%, transparent 40%, rgba(3,4,10,0.7) 100%);
+  position: relative;
+}
+.cosmos-battle-station::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,191,255,0.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cosmos-joinform-bg {
+  background:
+    conic-gradient(from 0deg at 50% 50%,
+      transparent 0deg, rgba(255,255,255,0.015) 0.5deg, transparent 1deg,
+      transparent 10deg, rgba(255,255,255,0.015) 10.5deg, transparent 11deg,
+      transparent 20deg, rgba(255,255,255,0.015) 20.5deg, transparent 21deg,
+      transparent 30deg, rgba(255,255,255,0.015) 30.5deg, transparent 31deg,
+      transparent 40deg, rgba(255,255,255,0.015) 40.5deg, transparent 41deg,
+      transparent 50deg, rgba(255,255,255,0.015) 50.5deg, transparent 51deg,
+      transparent 60deg, rgba(255,255,255,0.015) 60.5deg, transparent 61deg,
+      transparent 70deg, rgba(255,255,255,0.015) 70.5deg, transparent 71deg,
+      transparent 80deg, rgba(255,255,255,0.015) 80.5deg, transparent 81deg,
+      transparent 90deg, rgba(255,255,255,0.015) 90.5deg, transparent 91deg,
+      transparent 100deg, rgba(255,255,255,0.015) 100.5deg, transparent 101deg,
+      transparent 110deg, rgba(255,255,255,0.015) 110.5deg, transparent 111deg,
+      transparent 120deg, rgba(255,255,255,0.015) 120.5deg, transparent 121deg,
+      transparent 130deg, rgba(255,255,255,0.015) 130.5deg, transparent 131deg,
+      transparent 140deg, rgba(255,255,255,0.015) 140.5deg, transparent 141deg,
+      transparent 150deg, rgba(255,255,255,0.015) 150.5deg, transparent 151deg,
+      transparent 160deg, rgba(255,255,255,0.015) 160.5deg, transparent 161deg,
+      transparent 170deg, rgba(255,255,255,0.015) 170.5deg, transparent 171deg,
+      transparent 180deg, rgba(255,255,255,0.015) 180.5deg, transparent 181deg,
+      transparent 190deg, rgba(255,255,255,0.015) 190.5deg, transparent 191deg,
+      transparent 200deg, rgba(255,255,255,0.015) 200.5deg, transparent 201deg,
+      transparent 210deg, rgba(255,255,255,0.015) 210.5deg, transparent 211deg,
+      transparent 220deg, rgba(255,255,255,0.015) 220.5deg, transparent 221deg,
+      transparent 230deg, rgba(255,255,255,0.015) 230.5deg, transparent 231deg,
+      transparent 240deg, rgba(255,255,255,0.015) 240.5deg, transparent 241deg,
+      transparent 250deg, rgba(255,255,255,0.015) 250.5deg, transparent 251deg,
+      transparent 260deg, rgba(255,255,255,0.015) 260.5deg, transparent 261deg,
+      transparent 270deg, rgba(255,255,255,0.015) 270.5deg, transparent 271deg,
+      transparent 280deg, rgba(255,255,255,0.015) 280.5deg, transparent 281deg,
+      transparent 290deg, rgba(255,255,255,0.015) 290.5deg, transparent 291deg,
+      transparent 300deg, rgba(255,255,255,0.015) 300.5deg, transparent 301deg,
+      transparent 310deg, rgba(255,255,255,0.015) 310.5deg, transparent 311deg,
+      transparent 320deg, rgba(255,255,255,0.015) 320.5deg, transparent 321deg,
+      transparent 330deg, rgba(255,255,255,0.015) 330.5deg, transparent 331deg,
+      transparent 340deg, rgba(255,255,255,0.015) 340.5deg, transparent 341deg,
+      transparent 350deg, rgba(255,255,255,0.015) 350.5deg, transparent 351deg,
+      transparent 360deg
+    ),
+    var(--color-cosmos-abyss);
+}
+
+/* ─── COSMOSWIN CARD BACK ───────────────────────────────────── */
+.cosmos-card-back {
+  background-color: var(--color-cosmos-deep);
+  border: 1px solid var(--color-cosmos-hull);
+  outline: 1px solid var(--color-cosmos-beam-800);
+  outline-offset: -5px;
+  background-image:
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) top left / 8px 1px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) top left / 1px 8px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) top right / 8px 1px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) top right / 1px 8px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) bottom left / 8px 1px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) bottom left / 1px 8px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) bottom right / 8px 1px no-repeat,
+    linear-gradient(var(--color-cosmos-beam-600), var(--color-cosmos-beam-600)) bottom right / 1px 8px no-repeat,
+    radial-gradient(circle, rgba(0,191,255,0.08) 1px, transparent 1px);
+  background-size:
+    8px 1px, 1px 8px, 8px 1px, 1px 8px,
+    8px 1px, 1px 8px, 8px 1px, 1px 8px,
+    3px 3px;
+}
+
+/* ─── THEME TOGGLE BUTTONS ──────────────────────────────────── */
+.casino-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 0;
+  background: var(--color-casino-surface, #1c1c1e);
+  border: 1px solid var(--color-casino-border, #2a2a2e);
+  color: var(--color-gold-400, #facc15);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+}
+.casino-theme-toggle:hover {
+  border-color: var(--color-gold-500, #d4a017);
+  color: var(--color-gold-300, #fde047);
+}
+
+[data-theme="cosmoswin"] .cosmos-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 0;
+  background: var(--color-cosmos-deep);
+  border: 1px solid var(--color-cosmos-hull);
+  color: var(--color-cosmos-beam-400);
+  font-family: var(--font-cosmos-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+[data-theme="cosmoswin"] .cosmos-theme-toggle:hover {
+  border-color: var(--color-cosmos-beam-500);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.25);
+}
+
+/* ─── COSMOSWIN SCROLLBAR ───────────────────────────────────── */
+[data-theme="cosmoswin"] ::-webkit-scrollbar {
+  width: 4px;
+}
+[data-theme="cosmoswin"] ::-webkit-scrollbar-track {
+  background: var(--color-cosmos-void);
+}
+[data-theme="cosmoswin"] ::-webkit-scrollbar-thumb {
+  background: var(--color-cosmos-hull);
+}
+[data-theme="cosmoswin"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cosmos-beam-700);
+}
+
+/* ─── COSMOSWIN ANIMATIONS ──────────────────────────────────── */
+
+/* Energy burst on vote cast */
+@keyframes cosmos-vote-burst {
+  0%   { opacity: 0.8; transform: scale(0.8); }
+  50%  { opacity: 0.6; }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+
+.cosmos-card-selected::after {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background-image: conic-gradient(
+    from 0deg,
+    transparent 0deg,   rgba(0,191,255,0.4) 2deg,  transparent 4deg,
+    transparent 30deg,  rgba(0,191,255,0.4) 32deg, transparent 34deg,
+    transparent 60deg,  rgba(0,191,255,0.4) 62deg, transparent 64deg,
+    transparent 90deg,  rgba(0,191,255,0.4) 92deg, transparent 94deg,
+    transparent 120deg, rgba(0,191,255,0.4) 122deg, transparent 124deg,
+    transparent 150deg, rgba(0,191,255,0.4) 152deg, transparent 154deg,
+    transparent 180deg, rgba(0,191,255,0.4) 182deg, transparent 184deg,
+    transparent 210deg, rgba(0,191,255,0.4) 212deg, transparent 214deg,
+    transparent 240deg, rgba(0,191,255,0.4) 242deg, transparent 244deg,
+    transparent 270deg, rgba(0,191,255,0.4) 272deg, transparent 274deg,
+    transparent 300deg, rgba(0,191,255,0.4) 302deg, transparent 304deg,
+    transparent 330deg, rgba(0,191,255,0.4) 332deg, transparent 334deg,
+    transparent 360deg
+  );
+  border-radius: 50%;
+  animation: cosmos-vote-burst 350ms cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Panel flash on reveal */
+@keyframes cosmos-reveal-flash {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.cosmos-reveal-flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: white;
+  pointer-events: none;
+  z-index: 9999;
+  animation: cosmos-reveal-flash 350ms ease-out forwards;
+}
+
+/* Command pulse while waiting for votes */
+@keyframes cosmos-command-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,191,255,0.3), inset 0 0 10px rgba(0,191,255,0.05); }
+  50%       { box-shadow: 0 0 25px rgba(0,191,255,0.6), inset 0 0 20px rgba(0,191,255,0.1); }
+}
+.cosmos-reveal-btn-waiting {
+  animation: cosmos-command-pulse 2.5s ease-in-out infinite;
+}
+
+/* Online status pulse */
+@keyframes cosmos-online-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,148,0.6); }
+  50%       { box-shadow: 0 0 0 4px rgba(0,255,148,0); }
+}
+.cosmos-online-dot {
+  animation: cosmos-online-pulse 2s ease-in-out infinite;
+}
+
+/* Histogram bar reveal */
+@keyframes cosmos-bar-expand {
+  from { width: 0; }
+  to   { width: var(--bar-target-width); }
+}
+.cosmos-histogram-bar {
+  animation: cosmos-bar-expand 600ms ease-out forwards;
+  animation-delay: calc(var(--bar-index) * 80ms);
+}
+
+/* Consensus beam pulse (replaces goldPulse) */
+@keyframes cosmos-consensus-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0,191,255,0.5); }
+  50%  { box-shadow: 0 0 0 20px rgba(0,191,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,191,255,0); }
+}
+.cosmos-consensus-pulse {
+  animation: cosmos-consensus-pulse 1.2s ease-out 3;
+}
+
+/* Logo scan-line reveal */
+@keyframes cosmos-scanline-reveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
+}
+.cosmos-logo-reveal {
+  animation: cosmos-scanline-reveal 600ms ease-out forwards;
+}
+
+/* Theme switch smooth transition */
+html.cosmos-transitioning,
+html.cosmos-transitioning * {
+  transition: background-color 250ms ease, border-color 250ms ease, color 250ms ease !important;
+}
+
+/* ─── COSMOSWIN REDUCED MOTION ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .cosmos-card-selected::after { animation: none; }
+  .cosmos-reveal-btn-waiting   { animation: none; }
+  .cosmos-online-dot           { animation: none; }
+  .cosmos-histogram-bar        { animation: none; width: var(--bar-target-width); }
+  .cosmos-consensus-pulse      { animation: none; }
+  .cosmos-logo-reveal          { animation: none; clip-path: none; }
+  .cosmos-reveal-flash-overlay { display: none; }
 }

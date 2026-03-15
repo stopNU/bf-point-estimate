@@ -86,17 +86,31 @@ export interface ConfirmationModalConfig {
   onCancel?: () => void;
 }
 
-export const AVATARS: { id: string; emoji: string; label: string }[] = [
-  { id: 'dealer', emoji: '🎰', label: 'The Dealer' },
-  { id: 'joker', emoji: '🃏', label: 'The Joker' },
-  { id: 'crown', emoji: '👑', label: 'High Roller' },
-  { id: 'dice', emoji: '🎲', label: 'Lucky Dice' },
-  { id: 'diamond', emoji: '💎', label: 'Diamond' },
-  { id: 'horse', emoji: '🐎', label: 'Dark Horse' },
-  { id: 'trophy', emoji: '🏆', label: 'Champion' },
-  { id: 'tophat', emoji: '🎩', label: 'Top Hat' },
-  { id: 'star', emoji: '🌟', label: 'All Star' },
-  { id: 'spade', emoji: '♠️', label: 'Ace of Spades' },
-  { id: 'fire', emoji: '🔥', label: 'Hot Hand' },
-  { id: 'rocket', emoji: '🚀', label: 'Rocket' },
+export const AVATARS: { id: string; emoji: string; label: string; theme?: 'classic' | 'cosmos' }[] = [
+  // Classic Theme Avatars
+  { id: 'dealer', emoji: '🎰', label: 'The Dealer', theme: 'classic' },
+  { id: 'joker', emoji: '🃏', label: 'The Joker', theme: 'classic' },
+  { id: 'crown', emoji: '👑', label: 'High Roller', theme: 'classic' },
+  { id: 'dice', emoji: '🎲', label: 'Lucky Dice', theme: 'classic' },
+  { id: 'diamond', emoji: '💎', label: 'Diamond', theme: 'classic' },
+  { id: 'horse', emoji: '🐎', label: 'Dark Horse', theme: 'classic' },
+  { id: 'trophy', emoji: '🏆', label: 'Champion', theme: 'classic' },
+  { id: 'tophat', emoji: '🎩', label: 'Top Hat', theme: 'classic' },
+  { id: 'star', emoji: '🌟', label: 'All Star', theme: 'classic' },
+  { id: 'spade', emoji: '♠️', label: 'Ace of Spades', theme: 'classic' },
+  { id: 'fire', emoji: '🔥', label: 'Hot Hand', theme: 'classic' },
+  { id: 'rocket', emoji: '🚀', label: 'Rocket', theme: 'classic' },
+  // Cosmos Theme Avatars (Sci-Fi Inspired)
+  { id: 'spaceman', emoji: '🧑‍🚀', label: 'Spaceman', theme: 'cosmos' },
+  { id: 'alien', emoji: '👽', label: 'Alien', theme: 'cosmos' },
+  { id: 'ufo', emoji: '🛸', label: 'UFO Pilot', theme: 'cosmos' },
+  { id: 'satellite', emoji: '🛰️', label: 'Satellite', theme: 'cosmos' },
+  { id: 'meteor', emoji: '☄️', label: 'Meteor', theme: 'cosmos' },
+  { id: 'comet', emoji: '☪️', label: 'Comet', theme: 'cosmos' },
+  { id: 'galaxy', emoji: '🌌', label: 'Galaxy', theme: 'cosmos' },
+  { id: 'pulsar', emoji: '⚪', label: 'Pulsar', theme: 'cosmos' },
+  { id: 'quasar', emoji: '✨', label: 'Quasar', theme: 'cosmos' },
+  { id: 'nebula', emoji: '🌠', label: 'Nebula', theme: 'cosmos' },
+  { id: 'cyborg', emoji: '🤖', label: 'Cyborg', theme: 'cosmos' },
+  { id: 'android', emoji: '🦾', label: 'Android', theme: 'cosmos' },
 ];

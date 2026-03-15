@@ -122,6 +122,8 @@ class GameService {
       isOnline: false,
     };
 
+    console.log(`User joined: ${participant.name} (ID: ${participant.id}, Role: ${participant.role})`);
+
     this.state.participants.push(participant);
 
     // First person becomes admin

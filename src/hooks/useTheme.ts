@@ -21,13 +21,15 @@ export function useTheme() {
     return (localStorage.getItem('bf-theme') as Theme) ?? 'casino';
   });
 
-  // Apply theme on initial load (in case SSR rendered without data-theme)
+  // Apply theme whenever it changes
   useEffect(() => {
     if (theme === 'cosmoswin') {
       document.documentElement.setAttribute('data-theme', 'cosmoswin');
       loadCosmoswinFonts();
+    } else {
+      document.documentElement.removeAttribute('data-theme');
     }
-  }, []);
+  }, [theme]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
@@ -40,12 +42,6 @@ export function useTheme() {
         document.documentElement.classList.remove('cosmos-transitioning');
       }, 300);
 
-      if (next === 'cosmoswin') {
-        document.documentElement.setAttribute('data-theme', 'cosmoswin');
-        loadCosmoswinFonts();
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
       return next;
     });
   }, []);

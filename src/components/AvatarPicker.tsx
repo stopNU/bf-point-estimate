@@ -11,9 +11,17 @@ interface AvatarPickerProps {
 export default function AvatarPicker({ selected, onSelect }: AvatarPickerProps) {
   const { isCosmos } = useTheme();
 
+  // Filter avatars based on current theme
+  const availableAvatars = AVATARS.filter((avatar) => {
+    // If no theme is specified on the avatar, show it in both themes
+    if (!avatar.theme) return true;
+    // Otherwise, only show if it matches the current theme
+    return isCosmos ? avatar.theme === 'cosmos' : avatar.theme === 'classic';
+  });
+
   return (
     <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
-      {AVATARS.map((avatar) => {
+      {availableAvatars.map((avatar) => {
         const isSelected = selected === avatar.id;
         return (
           <button
